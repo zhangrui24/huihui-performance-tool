@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>慧慧·业绩数据工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: #f5f0eb;
+            color: #333;
+            padding: 16px;
+            padding-bottom: 80px;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            padding: 20px 0 16px;
+        }
+        .header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #8b5e3c;
+            letter-spacing: 2px;
+        }
+        .header .sub {
+            font-size: 13px;
+            color: #a0806a;
+            margin-top: 4px;
+        }
+        .header .date-display {
+            font-size: 14px;
+            color: #8b5e3c;
+            margin-top: 6px;
+            font-weight: 500;
+        }
+        .section {
+            background: #fff;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 14px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+        .section-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #8b5e3c;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f0e6de;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .section-title .target {
+            font-size: 12px;
+            font-weight: 400;
+            color: #a0806a;
+        }
+        .row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            gap: 6px;
+        }
+        .row:last-child {
+            margin-bottom: 0;
+        }
+        .label {
+            font-size: 14px;
+            color: #555;
+            min-width: 72px;
+            flex-shrink: 0;
+        }
+        .label-sm {
+            min-width: 56px;
+        }
+        .input-wrap {
+            flex: 1;
+            position: relative;
+        }
+        .input-wrap input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1.5px solid #e0d5cc;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            background: #faf8f6;
+            transition: border-color 0.2s;
+            text-align: right;
+            font-weight: 500;
+            color: #333;
+        }
+        .input-wrap input:focus {
+            border-color: #c4a88a;
+            background: #fff;
+        }
+        .input-wrap input::placeholder {
+            color: #ccc;
+            font-weight: 400;
+            font-size: 12px;
+        }
+        .result-value {
+            font-size: 15px;
+            font-weight: 600;
+            min-width: 60px;
+            text-align: right;
+            color: #8b5e3c;
+            flex-shrink: 0;
+        }
+        .result-value.green {
+            color: #2e7d32;
+        }
+        .result-value.red {
+            color: #c62828;
+        }
+        .result-value.orange {
+            color: #e65100;
+        }
+        .divider {
+            height: 1px;
+            background: #f0e6de;
+            margin: 10px 0;
+        }
+        .total-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0 4px;
+            border-top: 2px solid #e8dcd3;
+            margin-top: 6px;
+        }
+        .total-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #8b5e3c;
+        }
+        .total-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #8b5e3c;
+        }
+        .total-value.green { color: #2e7d32; }
+        .total-value.red { color: #c62828; }
+        .total-value.orange { color: #e65100; }
+        .progress-bar {
+            height: 6px;
+            background: #f0e6de;
+            border-radius: 3px;
+            margin: 8px 0 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            background: linear-gradient(90deg, #c4a88a, #8b5e3c);
+            transition: width 0.4s ease;
+        }
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #a0806a;
+        }
+        .badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .badge {
+            background: #f5f0eb;
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 13px;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .badge .num {
+            font-weight: 700;
+            color: #8b5e3c;
+        }
+        .badge .num.green { color: #2e7d32; }
+        .badge .num.red { color: #c62828; }
+        .today-section {
+            background: linear-gradient(135deg, #faf6f2, #f0e6de);
+        }
+        .today-section .section-title {
+            border-bottom-color: #dccfc4;
+        }
+        .footer {
+            text-align: center;
+            padding: 16px 0 8px;
+            font-size: 12px;
+            color: #c4b5a8;
+        }
+        .reset-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            background: #8b5e3c;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: background 0.2s;
+        }
+        .reset-btn:active {
+            background: #6e4a2e;
+        }
+        .save-btn {
+            background: #5a7d5a;
+        }
+        .save-btn:active {
+            background: #3d5e3d;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-group .reset-btn {
+            flex: 1;
+        }
+        .formula-hint {
+            font-size: 11px;
+            color: #bbb;
+            text-align: right;
+            margin-top: 2px;
+        }
+        .input-wrap .unit {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 13px;
+            color: #aaa;
+            pointer-events: none;
+        }
+        .input-wrap input.has-unit {
+            padding-right: 28px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>🌸 慧慧·业绩工具</h1>
+    <div class="sub">每日数据录入 · 自动汇总</div>
+    <div class="date-display" id="dateDisplay"></div>
+</div>
+
+<!-- ===== 本月业绩 ===== -->
+<div class="section">
+    <div class="section-title">
+        📊 本月业绩
+        <span class="target">目标 4W</span>
+    </div>
+    <div class="row">
+        <span class="label">老客业绩</span>
+        <div class="input-wrap">
+            <input type="text" id="oldCustomer" inputmode="decimal" placeholder="0" oninput="calcMonthly()">
+        </div>
+    </div>
+    <div class="row">
+        <span class="label">新客业绩</span>
+        <div class="input-wrap">
+            <input type="text" id="newCustomer" inputmode="decimal" placeholder="0" oninput="calcMonthly()">
+        </div>
+    </div>
+    <div class="divider"></div>
+    <div class="total-row">
+        <span class="total-label">本月业绩</span>
+        <span class="total-value" id="monthlyPerformance">0</span>
+    </div>
+    <div class="progress-bar">
+        <div class="progress-fill" id="performanceProgress" style="width:0%"></div>
+    </div>
+    <div class="progress-label">
+        <span>完成率</span>
+        <span id="performanceRate">0%</span>
+    </div>
+</div>
+
+<!-- ===== 本月营收 ===== -->
+<div class="section">
+    <div class="section-title">
+        💰 本月营收
+        <span class="target">目标 4.5W</span>
+    </div>
+    <div class="row">
+        <span class="label">产品售卖</span>
+        <div class="input-wrap">
+            <input type="text" id="productSales" inputmode="decimal" placeholder="0" oninput="calcRevenue()">
+        </div>
+    </div>
+    <div class="row">
+        <span class="label">项目业绩</span>
+        <div class="input-wrap">
+            <input type="text" id="projectPerformance" inputmode="decimal" placeholder="0" oninput="calcRevenue()">
+        </div>
+    </div>
+    <div class="row">
+        <span class="label">项目耗卡</span>
+        <div class="input-wrap">
+            <input type="text" id="projectCardUsage" inputmode="decimal" placeholder="0" oninput="calcRevenue()">
+        </div>
+    </div>
+    <div class="divider"></div>
+    <div class="total-row">
+        <span class="total-label">本月营收</span>
+        <span class="total-value" id="monthlyRevenue">0</span>
+    </div>
+    <div class="progress-bar">
+        <div class="progress-fill" id="revenueProgress" style="width:0%"></div>
+    </div>
+    <div class="progress-label">
+        <span>完成率</span>
+        <span id="revenueRate">0%</span>
+    </div>
+</div>
+
+<!-- ===== 客次 & 其他 ===== -->
+<div class="section">
+    <div class="section-title">
+        👥 客次统计
+        <span class="target">目标 60</span>
+    </div>
+    <div class="row">
+        <span class="label label-sm">新客</span>
+        <div class="input-wrap">
+            <input type="text" id="newGuestCount" inputmode="numeric" placeholder="0" oninput="calcGuests()">
+        </div>
+    </div>
+    <div class="row">
+        <span class="label label-sm">老客</span>
+        <div class="input-wrap">
+            <input type="text" id="oldGuestCount" inputmode="numeric" placeholder="0" oninput="calcGuests()">
+        </div>
+    </div>
+    <div class="divider"></div>
+    <div class="total-row">
+        <span class="total-label">本月客次</span>
+        <span class="total-value" id="totalGuests">0</span>
+    </div>
+    <div class="progress-bar">
+        <div class="progress-fill" id="guestProgress" style="width:0%"></div>
+    </div>
+    <div class="progress-label">
+        <span>完成率</span>
+        <span id="guestRate">0%</span>
+    </div>
+
+    <div class="divider"></div>
+    <div class="row">
+        <span class="label">持卡会员</span>
+        <div class="input-wrap">
+            <input type="text" id="cardMembers" inputmode="numeric" placeholder="0" oninput="calcOthers()">
+        </div>
+    </div>
+    <div class="row">
+        <span class="label">持卡到店</span>
+        <div class="input-wrap">
+            <input type="text" id="cardArrivals" inputmode="numeric" placeholder="0" oninput="calcOthers()">
+        </div>
+    </div>
+    <div class="row">
+        <span class="label">本月好评</span>
+        <div class="input-wrap">
+            <input type="text" id="reviews" inputmode="numeric" placeholder="0" oninput="calcOthers()">
+        </div>
+    </div>
+</div>
+
+<!-- ===== 今日数据 ===== -->
+<div class="section today-section">
+    <div class="section-title">
+        📅 今日数据
+    </div>
+    <div class="row">
+        <span class="label">今日客数</span>
+        <div class="input-wrap">
+            <input type="text" id="todayGuests" inputmode="numeric" placeholder="0" oninput="calcToday()">
+        </div>
+    </div>
+    <div class="row">
+        <span class="label">劳动业绩</span>
+        <div class="input-wrap">
+            <input type="text" id="todayLabor" inputmode="decimal" placeholder="0" oninput="calcToday()">
+        </div>
+    </div>
+    <div class="row">
+        <span class="label">消耗</span>
+        <div class="input-wrap">
+            <input type="text" id="todayConsume" inputmode="decimal" placeholder="0" oninput="calcToday()">
+        </div>
+    </div>
+    <div class="row">
+        <span class="label">今日产品</span>
+        <div class="input-wrap">
+            <input type="text" id="todayProduct" inputmode="decimal" placeholder="0" oninput="calcToday()">
+        </div>
+    </div>
+    <div class="divider"></div>
+    <div class="total-row">
+        <span class="total-label">今日营收</span>
+        <span class="total-value" id="todayRevenue">0</span>
+    </div>
+    <div class="row" style="margin-top:6px">
+        <span class="label">今日业绩</span>
+        <div class="input-wrap">
+            <input type="text" id="todayPerformance" inputmode="decimal" placeholder="0" oninput="calcToday()">
+        </div>
+    </div>
+</div>
+
+<!-- ===== 项目耗卡均价 ===== -->
+<div class="section">
+    <div class="section-title">
+        📈 耗卡均价
+    </div>
+    <div class="row">
+        <span class="label">项目耗卡</span>
+        <div class="input-wrap">
+            <input type="text" id="avgCardTotal" inputmode="decimal" placeholder="0" oninput="calcAvg()">
+        </div>
+    </div>
+    <div class="row">
+        <span class="label">客次</span>
+        <div class="input-wrap">
+            <input type="text" id="avgCardGuests" inputmode="numeric" placeholder="0" oninput="calcAvg()">
+        </div>
+    </div>
+    <div class="divider"></div>
+    <div class="total-row">
+        <span class="total-label">耗卡均价</span>
+        <span class="total-value" id="avgCardPrice">0</span>
+    </div>
+</div>
+
+<div class="btn-group">
+    <button class="reset-btn" onclick="resetAll()">🔄 重置所有数据</button>
+    <button class="reset-btn save-btn" onclick="saveData()">💾 保存到本地</button>
+</div>
+
+<div class="footer">
+    数据自动保存在浏览器中 · 刷新页面不丢失
+</div>
+
+<script>
+// ===== 工具函数 =====
+function parseNum(v) {
+    if (typeof v === 'string') {
+        v = v.trim();
+        if (v === '' || v === '-' || v === '+') return 0;
+        // 支持表达式计算
+        try {
+            // 安全计算：只允许数字、运算符、小数点、括号
+            const sanitized = v.replace(/[^0-9+\-*/().]/g, '');
+            if (sanitized === '') return 0;
+            const result = Function('"use strict"; return (' + sanitized + ')')();
+            return isNaN(result) ? 0 : result;
+        } catch(e) {
+            return 0;
+        }
+    }
+    return typeof v === 'number' ? v : 0;
+}
+
+function fmt(n) {
+    return n.toLocaleString('zh-CN', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+}
+
+function fmtRate(n) {
+    return n.toFixed(1) + '%';
+}
+
+// ===== 本月业绩 =====
+function calcMonthly() {
+    const oldV = parseNum(document.getElementById('oldCustomer').value);
+    const newV = parseNum(document.getElementById('newCustomer').value);
+    const total = oldV + newV;
+    document.getElementById('monthlyPerformance').textContent = fmt(total);
+    const target = 40000;
+    const rate = Math.min(total / target * 100, 100);
+    document.getElementById('performanceProgress').style.width = rate + '%';
+    document.getElementById('performanceRate').textContent = fmtRate(total / target * 100);
+    autoSave();
+}
+
+// ===== 本月营收 =====
+function calcRevenue() {
+    const product = parseNum(document.getElementById('productSales').value);
+    const project = parseNum(document.getElementById('projectPerformance').value);
+    const card = parseNum(document.getElementById('projectCardUsage').value);
+    const total = product + project + card;
+    document.getElementById('monthlyRevenue').textContent = fmt(total);
+    const target = 45000;
+    const rate = Math.min(total / target * 100, 100);
+    document.getElementById('revenueProgress').style.width = rate + '%';
+    document.getElementById('revenueRate').textContent = fmtRate(total / target * 100);
+    autoSave();
+}
+
+// ===== 客次 =====
+function calcGuests() {
+    const newG = parseNum(document.getElementById('newGuestCount').value);
+    const oldG = parseNum(document.getElementById('oldGuestCount').value);
+    const total = newG + oldG;
+    document.getElementById('totalGuests').textContent = fmt(total);
+    const target = 60;
+    const rate = Math.min(total / target * 100, 100);
+    document.getElementById('guestProgress').style.width = rate + '%';
+    document.getElementById('guestRate').textContent = fmtRate(total / target * 100);
+    autoSave();
+}
+
+// ===== 其他 =====
+function calcOthers() {
+    autoSave();
+}
+
+// ===== 今日数据 =====
+function calcToday() {
+    const labor = parseNum(document.getElementById('todayLabor').value);
+    const consume = parseNum(document.getElementById('todayConsume').value);
+    const total = labor + consume;
+    document.getElementById('todayRevenue').textContent = fmt(total);
+    autoSave();
+}
+
+// ===== 耗卡均价 =====
+function calcAvg() {
+    const total = parseNum(document.getElementById('avgCardTotal').value);
+    const guests = parseNum(document.getElementById('avgCardGuests').value);
+    const avg = guests > 0 ? total / guests : 0;
+    document.getElementById('avgCardPrice').textContent = fmt(avg);
+    autoSave();
+}
+
+// ===== 自动保存 & 加载 =====
+const STORAGE_KEY = 'huihui_performance_data';
+
+function autoSave() {
+    const data = collectData();
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch(e) {}
+}
+
+function collectData() {
+    return {
+        oldCustomer: document.getElementById('oldCustomer').value,
+        newCustomer: document.getElementById('newCustomer').value,
+        productSales: document.getElementById('productSales').value,
+        projectPerformance: document.getElementById('projectPerformance').value,
+        projectCardUsage: document.getElementById('projectCardUsage').value,
+        newGuestCount: document.getElementById('newGuestCount').value,
+        oldGuestCount: document.getElementById('oldGuestCount').value,
+        cardMembers: document.getElementById('cardMembers').value,
+        cardArrivals: document.getElementById('cardArrivals').value,
+        reviews: document.getElementById('reviews').value,
+        todayGuests: document.getElementById('todayGuests').value,
+        todayLabor: document.getElementById('todayLabor').value,
+        todayConsume: document.getElementById('todayConsume').value,
+        todayProduct: document.getElementById('todayProduct').value,
+        todayPerformance: document.getElementById('todayPerformance').value,
+        avgCardTotal: document.getElementById('avgCardTotal').value,
+        avgCardGuests: document.getElementById('avgCardGuests').value,
+    };
+}
+
+function loadData() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const data = JSON.parse(raw);
+        Object.keys(data).forEach(key => {
+            const el = document.getElementById(key);
+            if (el) el.value = data[key];
+        });
+    } catch(e) {}
+}
+
+function saveData() {
+    autoSave();
+    alert('✅ 数据已保存到本地浏览器！');
+}
+
+function resetAll() {
+    if (!confirm('确定要重置所有数据吗？')) return;
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(inp => inp.value = '');
+    calcMonthly();
+    calcRevenue();
+    calcGuests();
+    calcOthers();
+    calcToday();
+    calcAvg();
+    localStorage.removeItem(STORAGE_KEY);
+}
+
+// ===== 显示日期 =====
+function showDate() {
+    const now = new Date();
+    const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    const w = weekdays[now.getDay()];
+    document.getElementById('dateDisplay').textContent = `${y}年${m}月${d}日 星期${w}`;
+}
+
+// ===== 初始化 =====
+showDate();
+loadData();
+calcMonthly();
+calcRevenue();
+calcGuests();
+calcOthers();
+calcToday();
+calcAvg();
+</script>
+</body>
+</html>
