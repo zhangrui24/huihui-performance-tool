@@ -271,6 +271,24 @@
         .input-wrap input.has-unit {
             padding-right: 28px;
         }
+        .calc-result {
+            font-size: 12px;
+            font-weight: 600;
+            color: #8b5e3c;
+            min-width: 50px;
+            text-align: right;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+        .calc-result.empty {
+            color: #ddd;
+        }
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+        }
     </style>
 </head>
 <body>
@@ -289,14 +307,20 @@
     </div>
     <div class="row">
         <span class="label">老客业绩</span>
-        <div class="input-wrap">
-            <input type="text" id="oldCustomer" inputmode="decimal" placeholder="0" oninput="calcMonthly()">
+        <div class="input-row">
+            <div class="input-wrap">
+                <input type="text" id="oldCustomer" inputmode="decimal" placeholder="0" oninput="calcMonthly()">
+            </div>
+            <span class="calc-result empty" id="oldCustomer_result"></span>
         </div>
     </div>
     <div class="row">
         <span class="label">新客业绩</span>
-        <div class="input-wrap">
-            <input type="text" id="newCustomer" inputmode="decimal" placeholder="0" oninput="calcMonthly()">
+        <div class="input-row">
+            <div class="input-wrap">
+                <input type="text" id="newCustomer" inputmode="decimal" placeholder="0" oninput="calcMonthly()">
+            </div>
+            <span class="calc-result empty" id="newCustomer_result"></span>
         </div>
     </div>
     <div class="divider"></div>
@@ -321,20 +345,29 @@
     </div>
     <div class="row">
         <span class="label">产品售卖</span>
-        <div class="input-wrap">
-            <input type="text" id="productSales" inputmode="decimal" placeholder="0" oninput="calcRevenue()">
+        <div class="input-row">
+            <div class="input-wrap">
+                <input type="text" id="productSales" inputmode="decimal" placeholder="0" oninput="calcRevenue()">
+            </div>
+            <span class="calc-result empty" id="productSales_result"></span>
         </div>
     </div>
     <div class="row">
         <span class="label">项目业绩</span>
-        <div class="input-wrap">
-            <input type="text" id="projectPerformance" inputmode="decimal" placeholder="0" oninput="calcRevenue()">
+        <div class="input-row">
+            <div class="input-wrap">
+                <input type="text" id="projectPerformance" inputmode="decimal" placeholder="0" oninput="calcRevenue()">
+            </div>
+            <span class="calc-result empty" id="projectPerformance_result"></span>
         </div>
     </div>
     <div class="row">
         <span class="label">项目耗卡</span>
-        <div class="input-wrap">
-            <input type="text" id="projectCardUsage" inputmode="decimal" placeholder="0" oninput="calcRevenue()">
+        <div class="input-row">
+            <div class="input-wrap">
+                <input type="text" id="projectCardUsage" inputmode="decimal" placeholder="0" oninput="calcRevenue()">
+            </div>
+            <span class="calc-result empty" id="projectCardUsage_result"></span>
         </div>
     </div>
     <div class="divider"></div>
@@ -359,14 +392,20 @@
     </div>
     <div class="row">
         <span class="label label-sm">新客</span>
-        <div class="input-wrap">
-            <input type="text" id="newGuestCount" inputmode="numeric" placeholder="0" oninput="calcGuests()">
+        <div class="input-row">
+            <div class="input-wrap">
+                <input type="text" id="newGuestCount" inputmode="numeric" placeholder="0" oninput="calcGuests()">
+            </div>
+            <span class="calc-result empty" id="newGuestCount_result"></span>
         </div>
     </div>
     <div class="row">
         <span class="label label-sm">老客</span>
-        <div class="input-wrap">
-            <input type="text" id="oldGuestCount" inputmode="numeric" placeholder="0" oninput="calcGuests()">
+        <div class="input-row">
+            <div class="input-wrap">
+                <input type="text" id="oldGuestCount" inputmode="numeric" placeholder="0" oninput="calcGuests()">
+            </div>
+            <span class="calc-result empty" id="oldGuestCount_result"></span>
         </div>
     </div>
     <div class="divider"></div>
@@ -385,20 +424,29 @@
     <div class="divider"></div>
     <div class="row">
         <span class="label">持卡会员</span>
-        <div class="input-wrap">
-            <input type="text" id="cardMembers" inputmode="numeric" placeholder="0" oninput="calcOthers()">
+        <div class="input-row">
+            <div class="input-wrap">
+                <input type="text" id="cardMembers" inputmode="numeric" placeholder="0" oninput="calcOthers()">
+            </div>
+            <span class="calc-result empty" id="cardMembers_result"></span>
         </div>
     </div>
     <div class="row">
         <span class="label">持卡到店</span>
-        <div class="input-wrap">
-            <input type="text" id="cardArrivals" inputmode="numeric" placeholder="0" oninput="calcOthers()">
+        <div class="input-row">
+            <div class="input-wrap">
+                <input type="text" id="cardArrivals" inputmode="numeric" placeholder="0" oninput="calcOthers()">
+            </div>
+            <span class="calc-result empty" id="cardArrivals_result"></span>
         </div>
     </div>
     <div class="row">
         <span class="label">本月好评</span>
-        <div class="input-wrap">
-            <input type="text" id="reviews" inputmode="numeric" placeholder="0" oninput="calcOthers()">
+        <div class="input-row">
+            <div class="input-wrap">
+                <input type="text" id="reviews" inputmode="numeric" placeholder="0" oninput="calcOthers()">
+            </div>
+            <span class="calc-result empty" id="reviews_result"></span>
         </div>
     </div>
 </div>
@@ -410,26 +458,38 @@
     </div>
     <div class="row">
         <span class="label">今日客数</span>
-        <div class="input-wrap">
-            <input type="text" id="todayGuests" inputmode="numeric" placeholder="0" oninput="calcToday()">
+        <div class="input-row">
+            <div class="input-wrap">
+                <input type="text" id="todayGuests" inputmode="numeric" placeholder="0" oninput="calcToday()">
+            </div>
+            <span class="calc-result empty" id="todayGuests_result"></span>
         </div>
     </div>
     <div class="row">
         <span class="label">劳动业绩</span>
-        <div class="input-wrap">
-            <input type="text" id="todayLabor" inputmode="decimal" placeholder="0" oninput="calcToday()">
+        <div class="input-row">
+            <div class="input-wrap">
+                <input type="text" id="todayLabor" inputmode="decimal" placeholder="0" oninput="calcToday()">
+            </div>
+            <span class="calc-result empty" id="todayLabor_result"></span>
         </div>
     </div>
     <div class="row">
         <span class="label">消耗</span>
-        <div class="input-wrap">
-            <input type="text" id="todayConsume" inputmode="decimal" placeholder="0" oninput="calcToday()">
+        <div class="input-row">
+            <div class="input-wrap">
+                <input type="text" id="todayConsume" inputmode="decimal" placeholder="0" oninput="calcToday()">
+            </div>
+            <span class="calc-result empty" id="todayConsume_result"></span>
         </div>
     </div>
     <div class="row">
         <span class="label">今日产品</span>
-        <div class="input-wrap">
-            <input type="text" id="todayProduct" inputmode="decimal" placeholder="0" oninput="calcToday()">
+        <div class="input-row">
+            <div class="input-wrap">
+                <input type="text" id="todayProduct" inputmode="decimal" placeholder="0" oninput="calcToday()">
+            </div>
+            <span class="calc-result empty" id="todayProduct_result"></span>
         </div>
     </div>
     <div class="divider"></div>
@@ -439,8 +499,11 @@
     </div>
     <div class="row" style="margin-top:6px">
         <span class="label">今日业绩</span>
-        <div class="input-wrap">
-            <input type="text" id="todayPerformance" inputmode="decimal" placeholder="0" oninput="calcToday()">
+        <div class="input-row">
+            <div class="input-wrap">
+                <input type="text" id="todayPerformance" inputmode="decimal" placeholder="0" oninput="calcToday()">
+            </div>
+            <span class="calc-result empty" id="todayPerformance_result"></span>
         </div>
     </div>
 </div>
@@ -452,14 +515,20 @@
     </div>
     <div class="row">
         <span class="label">项目耗卡</span>
-        <div class="input-wrap">
-            <input type="text" id="avgCardTotal" inputmode="decimal" placeholder="0" oninput="calcAvg()">
+        <div class="input-row">
+            <div class="input-wrap">
+                <input type="text" id="avgCardTotal" inputmode="decimal" placeholder="0" oninput="calcAvg()">
+            </div>
+            <span class="calc-result empty" id="avgCardTotal_result"></span>
         </div>
     </div>
     <div class="row">
         <span class="label">客次</span>
-        <div class="input-wrap">
-            <input type="text" id="avgCardGuests" inputmode="numeric" placeholder="0" oninput="calcAvg()">
+        <div class="input-row">
+            <div class="input-wrap">
+                <input type="text" id="avgCardGuests" inputmode="numeric" placeholder="0" oninput="calcAvg()">
+            </div>
+            <span class="calc-result empty" id="avgCardGuests_result"></span>
         </div>
     </div>
     <div class="divider"></div>
@@ -506,6 +575,28 @@ function fmtRate(n) {
     return n.toFixed(1) + '%';
 }
 
+// 更新所有输入框旁边的计算结果标签
+function updateCalcLabels() {
+    const calcInputs = ['oldCustomer', 'newCustomer', 'productSales', 'projectPerformance', 'projectCardUsage',
+        'newGuestCount', 'oldGuestCount', 'cardMembers', 'cardArrivals', 'reviews',
+        'todayGuests', 'todayLabor', 'todayConsume', 'todayProduct', 'todayPerformance',
+        'avgCardTotal', 'avgCardGuests', 'targetPerformance', 'targetRevenue', 'targetGuests'];
+    calcInputs.forEach(id => {
+        const el = document.getElementById(id);
+        const label = document.getElementById(id + '_result');
+        if (el && label) {
+            const val = parseNum(el.value);
+            if (el.value.trim() === '' || val === 0) {
+                label.textContent = '';
+                label.classList.add('empty');
+            } else {
+                label.textContent = '= ' + fmt(val);
+                label.classList.remove('empty');
+            }
+        }
+    });
+}
+
 // ===== 本月业绩 =====
 function calcMonthly() {
     const oldV = parseNum(document.getElementById('oldCustomer').value);
@@ -516,6 +607,7 @@ function calcMonthly() {
     const rate = Math.min(total / target * 100, 100);
     document.getElementById('performanceProgress').style.width = rate + '%';
     document.getElementById('performanceRate').textContent = fmtRate(total / target * 100);
+    updateCalcLabels();
     autoSave();
 }
 
@@ -530,6 +622,7 @@ function calcRevenue() {
     const rate = Math.min(total / target * 100, 100);
     document.getElementById('revenueProgress').style.width = rate + '%';
     document.getElementById('revenueRate').textContent = fmtRate(total / target * 100);
+    updateCalcLabels();
     autoSave();
 }
 
@@ -543,11 +636,13 @@ function calcGuests() {
     const rate = Math.min(total / target * 100, 100);
     document.getElementById('guestProgress').style.width = rate + '%';
     document.getElementById('guestRate').textContent = fmtRate(total / target * 100);
+    updateCalcLabels();
     autoSave();
 }
 
 // ===== 其他 =====
 function calcOthers() {
+    updateCalcLabels();
     autoSave();
 }
 
@@ -557,6 +652,7 @@ function calcToday() {
     const consume = parseNum(document.getElementById('todayConsume').value);
     const total = labor + consume;
     document.getElementById('todayRevenue').textContent = fmt(total);
+    updateCalcLabels();
     autoSave();
 }
 
@@ -566,6 +662,7 @@ function calcAvg() {
     const guests = parseNum(document.getElementById('avgCardGuests').value);
     const avg = guests > 0 ? total / guests : 0;
     document.getElementById('avgCardPrice').textContent = fmt(avg);
+    updateCalcLabels();
     autoSave();
 }
 
